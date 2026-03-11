@@ -77,12 +77,24 @@ class DimensionScorer:
             call_type="evaluation",
         )
 
-        scores = self._parse_scores(text)
+        try:
+            scores = self._parse_scores(text)
+        except (json.JSONDecodeError, ValueError, KeyError) as e:
+            print(f"  [DEBUG] Raw LLM response:\n{text[:1000]}")
+            raise ValueError(f"Failed to parse evaluation response: {e}") from e
         return scores, usage
 
     def _parse_scores(self, text: str) -> list[DimensionScore]:
         """Parse LLM JSON response into DimensionScore objects."""
-        data = json.loads(text)
+        # gemini-2.5-flash may wrap JSON in markdown code fences
+        cleaned = text.strip()
+        if cleaned.startswith("```"):
+            # Strip ```json ... ``` wrapper
+            lines = cleaned.split("\n")
+            lines = [ln for ln in lines if not ln.strip().startswith("```")]
+            cleaned = "\n".join(lines)
+
+        data = json.loads(cleaned)
 
         # Handle both {"scores": [...]} and direct list
         raw_scores = data if isinstance(data, list) else data.get("scores", data)
@@ -91,7 +103,7 @@ class DimensionScorer:
         scores = []
         for item in raw_scores:
             score = DimensionScore(
-                dimension=item["dimension"],
+                dimension=item["dimension"].lower(),
                 score=float(item["score"]),
                 rationale=item["rationale"],
                 confidence=float(item.get("confidence", 0.8)),

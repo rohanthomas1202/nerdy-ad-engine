@@ -81,9 +81,40 @@ Be honest and calibrated. A {expected_tier}-performing ad should score according
 # GENERATION PROMPTS (Phase 2)
 # =============================================================================
 
-GENERATION_SYSTEM_PROMPT = ""  # Populated in Phase 2
+GENERATION_SYSTEM_PROMPT = """You are an expert Facebook/Instagram ad copywriter \
+for Varsity Tutors by Nerdy.
+You write high-converting ad copy that is empowering, knowledgeable, approachable, \
+and results-focused.
+You never use fear tactics, jargon, or arrogant claims.
+You always lead with outcomes, not features."""
 
-GENERATION_PROMPT = ""  # Populated in Phase 2
+GENERATION_PROMPT = """Write a Facebook/Instagram ad for Varsity Tutors using the \
+context and approach below.
+
+=== BRAND & AUDIENCE CONTEXT ===
+{enriched_context}
+
+=== VARIANT APPROACH ===
+{variant_instruction}
+
+=== FORMAT REQUIREMENTS ===
+Return a JSON object with exactly these fields:
+{{
+  "primary_text": "<main body copy, max 500 characters>",
+  "headline": "<bold headline, max 40 characters>",
+  "description": "<secondary text, max 125 characters>",
+  "cta": "<one of: Learn More, Sign Up, Get Started, Book Now, Try Free>"
+}}
+
+IMPORTANT CONSTRAINTS:
+- primary_text: max 500 characters. This is the main persuasive copy.
+- headline: max 40 characters. Bold, attention-grabbing.
+- description: max 125 characters. Supports the headline.
+- cta: must be exactly one of the allowed values listed above.
+- Follow the variant approach instruction closely.
+- Sound like Varsity Tutors — empowering, not pushy.
+- Include specific claims where possible (score improvements, tutor count, etc.).
+- End with a clear reason to take action."""
 
 # =============================================================================
 # EDITING / DIAGNOSIS PROMPTS (Phase 3)

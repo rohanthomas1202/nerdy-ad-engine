@@ -92,7 +92,22 @@ class GeminiClient:
         )
 
         start = time.time()
-        response = model.generate_content(prompt, generation_config=generation_config)
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                response = model.generate_content(
+                    prompt, generation_config=generation_config
+                )
+                break
+            except Exception as e:
+                if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                    wait = 60 * (attempt + 1)
+                    print(f"  Rate limited. Retrying in {wait}s... (attempt {attempt + 1})")
+                    time.sleep(wait)
+                    if attempt == max_retries - 1:
+                        raise
+                else:
+                    raise
         duration = time.time() - start
 
         # Extract token counts from usage metadata
@@ -114,8 +129,8 @@ class GeminiClient:
         )
         self._usage_log.append(usage)
 
-        # Rate limiting
-        time.sleep(0.5)
+        # Rate limiting — 4s delay to stay within free tier RPM limits
+        time.sleep(4)
 
         return response.text, usage
 
@@ -137,6 +152,8 @@ class GeminiClient:
             )
             try:
                 data = json.loads(text)
+                # Truncate string fields that exceed Pydantic max_length
+                self._truncate_long_fields(data, response_type)
                 parsed = response_type.model_validate(data)
                 return parsed, usage
             except (json.JSONDecodeError, Exception) as e:
@@ -148,6 +165,24 @@ class GeminiClient:
 
         # Unreachable, but satisfies type checker
         raise RuntimeError("Unreachable")
+
+    @staticmethod
+    def _truncate_long_fields(data: dict, model_type: type) -> None:
+        """Truncate string fields that exceed Pydantic max_length constraints."""
+        if not isinstance(data, dict):
+            return
+        for name, field_info in model_type.model_fields.items():
+            max_len = field_info.metadata and next(
+                (
+                    m.max_length
+                    for m in field_info.metadata
+                    if hasattr(m, "max_length")
+                ),
+                None,
+            )
+            if max_len and name in data and isinstance(data[name], str):
+                if len(data[name]) > max_len:
+                    data[name] = data[name][:max_len].rsplit(" ", 1)[0] + "…"
 
     @property
     def total_cost(self) -> float:
