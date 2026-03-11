@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "nerdy-ad-engine"
+version = "0.1.0"
+description = "Autonomous content generation system for Varsity Tutors ad copy"
+requires-python = ">=3.11"
+dependencies = [
+    "google-generativeai>=0.8.0",
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "matplotlib>=3.8",
+    "pandas>=2.1",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-asyncio>=0.21",
+    "ruff>=0.4",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]

@@ -1,0 +1,77 @@
+# Ad Briefs — Each brief generates 3 variants
+
+briefs:
+  - id: "sat-parent-conversion-01"
+    audience_segment: "parents_anxious"
+    product: "SAT Test Prep"
+    campaign_goal: "conversion"
+    key_message: "Raise your SAT score 200+ points with personalized tutoring"
+
+  - id: "sat-parent-awareness-01"
+    audience_segment: "parents_anxious"
+    product: "SAT Test Prep"
+    campaign_goal: "awareness"
+    key_message: "SAT prep that actually works — expert tutors matched to your child"
+
+  - id: "sat-student-conversion-01"
+    audience_segment: "students_stressed"
+    product: "SAT Test Prep"
+    campaign_goal: "conversion"
+    key_message: "Stop stressing. Start improving. Get a tutor who gets you."
+
+  - id: "sat-student-awareness-01"
+    audience_segment: "students_stressed"
+    product: "SAT Test Prep"
+    campaign_goal: "awareness"
+    key_message: "Real SAT strategies from real experts — not just another prep app"
+
+  - id: "sat-family-conversion-01"
+    audience_segment: "families_comparing"
+    product: "SAT Test Prep"
+    campaign_goal: "conversion"
+    key_message: "See why thousands of families choose Varsity Tutors for SAT prep"
+
+  - id: "sat-family-awareness-01"
+    audience_segment: "families_comparing"
+    product: "SAT Test Prep"
+    campaign_goal: "awareness"
+    key_message: "Compare SAT prep options — personalized tutoring vs one-size-fits-all"
+
+  - id: "sat-parent-conversion-02"
+    audience_segment: "parents_anxious"
+    product: "SAT Test Prep"
+    campaign_goal: "conversion"
+    key_message: "Free consultation — find out exactly where your child stands"
+    tone_override: "warm, reassuring"
+
+  - id: "sat-student-conversion-02"
+    audience_segment: "students_stressed"
+    product: "SAT Test Prep"
+    campaign_goal: "conversion"
+    key_message: "Your first session is free — zero commitment, real results"
+    tone_override: "casual, encouraging"
+
+  - id: "sat-parent-awareness-02"
+    audience_segment: "parents_anxious"
+    product: "SAT Test Prep"
+    campaign_goal: "awareness"
+    key_message: "The SAT is changing — make sure your child is ready"
+
+  - id: "sat-family-conversion-02"
+    audience_segment: "families_comparing"
+    product: "SAT Test Prep"
+    campaign_goal: "conversion"
+    key_message: "Flexible scheduling, expert tutors, proven results — all in one place"
+
+  - id: "sat-student-awareness-02"
+    audience_segment: "students_stressed"
+    product: "SAT Test Prep"
+    campaign_goal: "awareness"
+    key_message: "Join 40,000+ students who boosted their SAT scores with Varsity Tutors"
+
+  - id: "sat-parent-conversion-03"
+    audience_segment: "parents_anxious"
+    product: "SAT Test Prep"
+    campaign_goal: "conversion"
+    key_message: "Spring SAT is coming — start prep now for maximum improvement"
+    tone_override: "urgent but supportive"

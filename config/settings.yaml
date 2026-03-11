@@ -1,0 +1,46 @@
+# Nerdy Ad Engine — Global Configuration
+
+models:
+  generation:
+    name: "gemini-2.0-flash"
+    temperature: 0.8
+    seed: 42
+  evaluation:
+    name: "gemini-2.0-pro"
+    temperature: 0.1
+    seed: 42
+  editing:
+    name: "gemini-2.0-pro"
+    temperature: 0.3
+    seed: 42
+
+thresholds:
+  quality_gate: 7.0
+  max_edit_attempts: 3
+  variants_per_brief: 3
+  calibration_alignment_min: 0.80  # 80% of reference ads must align
+
+server:
+  port: 8020  # Always use ports 8020-8030
+
+costs:
+  # Per 1,000 tokens (USD)
+  flash_input_per_1k: 0.000075
+  flash_output_per_1k: 0.0003
+  pro_input_per_1k: 0.00125
+  pro_output_per_1k: 0.005
+
+weights:
+  clarity: 0.20
+  value_proposition: 0.25
+  call_to_action: 0.20
+  brand_voice: 0.15
+  emotional_resonance: 0.20
+
+output:
+  ad_library: "output/ad_library.json"
+  failed_ads: "output/failed_ads.json"
+  calibration_report: "output/calibration_report.json"
+  quality_trends: "output/quality_trends.png"
+  cost_dashboard: "output/cost_dashboard.png"
+  experiment_log: "output/experiment_log.json"

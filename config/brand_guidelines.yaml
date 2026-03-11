@@ -1,0 +1,92 @@
+# Varsity Tutors by Nerdy — Brand Guidelines
+
+brand:
+  name: "Varsity Tutors by Nerdy"
+  tagline: "Private Tutoring, Pair with the Perfect Tutor"
+  product: "SAT Test Prep"
+
+voice:
+  attributes:
+    - empowering
+    - knowledgeable
+    - approachable
+    - results-focused
+
+tone:
+  do:
+    - "Lead with outcomes, not features"
+    - "Be confident, not arrogant"
+    - "Meet people where they are — acknowledge the stress"
+    - "Use conversational language, not corporate speak"
+    - "Ground claims in specifics (score improvements, tutor count, success rates)"
+  dont:
+    - "No fear-mongering or scare tactics"
+    - "No jargon or SAT-specific lingo without explanation"
+    - "No elitist or exclusionary language"
+    - "No vague promises (avoid 'best', 'guaranteed' without evidence)"
+    - "No negative comparisons that name competitors directly"
+
+audiences:
+  parents_anxious:
+    label: "Parents Anxious About College Admissions"
+    emotional_triggers:
+      - "worry about child's future"
+      - "feeling overwhelmed by the process"
+      - "wanting the best for their child"
+      - "comparison anxiety (other families are already preparing)"
+    key_messages:
+      - "Expert tutors matched to your child's learning style"
+      - "Proven score improvements with personalized plans"
+      - "Take the stress out of SAT prep"
+
+  students_stressed:
+    label: "High School Students Stressed About Scores"
+    emotional_triggers:
+      - "test anxiety and performance pressure"
+      - "feeling unprepared or behind"
+      - "desire for independence and control"
+      - "wanting to prove themselves"
+    key_messages:
+      - "Learn at your own pace with a tutor who gets you"
+      - "Real strategies that actually work on test day"
+      - "Join thousands of students who raised their scores"
+
+  families_comparing:
+    label: "Families Comparing Prep Options"
+    emotional_triggers:
+      - "decision fatigue from too many options"
+      - "value consciousness (is it worth the investment?)"
+      - "social proof seeking"
+      - "trust and credibility concerns"
+    key_messages:
+      - "See why families choose Varsity Tutors over other options"
+      - "Flexible scheduling that fits your family's life"
+      - "Start with a free consultation — no commitment"
+
+competitors:
+  - name: "Princeton Review"
+    positioning: "Traditional, classroom-heavy, premium price"
+  - name: "Kaplan"
+    positioning: "Established, structured programs, mid-range"
+  - name: "Khan Academy"
+    positioning: "Free, self-paced, no personalization"
+  - name: "Chegg"
+    positioning: "Budget-friendly, online focus, homework help"
+
+ad_format:
+  primary_text:
+    max_chars: 500
+    description: "Main body copy above the image"
+  headline:
+    max_chars: 40
+    description: "Bold text below the image"
+  description:
+    max_chars: 125
+    description: "Secondary text below the headline"
+  cta:
+    allowed_values:
+      - "Learn More"
+      - "Sign Up"
+      - "Get Started"
+      - "Book Now"
+      - "Try Free"

@@ -1,0 +1,101 @@
+[
+  {
+    "id": "ref-high-01",
+    "primary_text": "You've watched your child stress over practice tests, wondering if they'll ever feel ready. What if SAT prep could actually build their confidence — not just their score? Our expert tutors create a personalized plan that targets exactly where your child needs help. No cookie-cutter programs. No overwhelming class sizes. Just 1-on-1 support designed around how they learn best.",
+    "headline": "SAT Prep That Builds Confidence",
+    "description": "Personalized 1-on-1 tutoring matched to your child's learning style. Start with a free session.",
+    "cta": "Try Free",
+    "performance_tier": "high",
+    "notes": "Strong emotional hook (parent empathy), specific differentiation (1-on-1, personalized), low-friction CTA"
+  },
+  {
+    "id": "ref-high-02",
+    "primary_text": "Students who work with Varsity Tutors improve their SAT scores by an average of 200+ points. Why? Because every session is tailored to their weak areas — not a one-size-fits-all curriculum. Your tutor adapts in real time, focusing on the strategies that will make the biggest difference on test day.",
+    "headline": "200+ Point SAT Improvement",
+    "description": "Expert tutors. Personalized plans. Real results. Book your free strategy session today.",
+    "cta": "Book Now",
+    "performance_tier": "high",
+    "notes": "Specific claim (200+ points), clear differentiation, credibility through mechanism explanation"
+  },
+  {
+    "id": "ref-high-03",
+    "primary_text": "The SAT doesn't test how smart your child is — it tests how prepared they are. And preparation looks different for every student. That's why Varsity Tutors matches your child with an expert tutor who builds a plan around their specific strengths and gaps. No wasted time on what they already know.",
+    "headline": "Prep Smarter, Not Harder",
+    "description": "Personalized SAT tutoring that focuses on what matters most. Free consultation available.",
+    "cta": "Get Started",
+    "performance_tier": "high",
+    "notes": "Reframes the SAT (not about intelligence), empowering tone, efficient value prop"
+  },
+  {
+    "id": "ref-high-04",
+    "primary_text": "Spring SAT is around the corner. Is your child ready? Our tutors have helped thousands of students walk into test day feeling confident and prepared. Start now and there's still time to make a real difference. Your first session is free — no strings attached.",
+    "headline": "Spring SAT Prep Starts Now",
+    "description": "Limited spring spots available. Free first session with an expert SAT tutor.",
+    "cta": "Book Now",
+    "performance_tier": "high",
+    "notes": "Timely urgency, social proof (thousands), low-friction free session, supportive tone"
+  },
+  {
+    "id": "ref-medium-01",
+    "primary_text": "Looking for SAT prep that actually works? Varsity Tutors connects students with expert tutors for personalized 1-on-1 sessions. Our tutors know the SAT inside and out, and they'll help your child build the skills and strategies they need to succeed.",
+    "headline": "Expert SAT Tutoring",
+    "description": "Personalized prep from top-rated tutors. Flexible scheduling to fit your life.",
+    "cta": "Learn More",
+    "performance_tier": "medium",
+    "notes": "Decent but generic opening question, less specific benefits, weaker CTA"
+  },
+  {
+    "id": "ref-medium-02",
+    "primary_text": "SAT prep doesn't have to be overwhelming. With Varsity Tutors, your child gets a dedicated tutor who creates a study plan just for them. From practice tests to strategy sessions, we cover everything your child needs to feel confident on test day.",
+    "headline": "SAT Prep Made Simple",
+    "description": "Dedicated tutors, personalized plans, and flexible scheduling. Get started today.",
+    "cta": "Get Started",
+    "performance_tier": "medium",
+    "notes": "Good brand voice, but lacks specificity in claims and emotional depth"
+  },
+  {
+    "id": "ref-medium-03",
+    "primary_text": "Every student learns differently. That's why Varsity Tutors matches your child with a tutor who adapts to their learning style. Whether they need help with math, reading, or both — we've got them covered.",
+    "headline": "Tutoring That Adapts to You",
+    "description": "Find your perfect SAT tutor match. Flexible sessions online or in-person.",
+    "cta": "Learn More",
+    "performance_tier": "medium",
+    "notes": "Good concept but lacks specific outcomes, emotional hook is weak"
+  },
+  {
+    "id": "ref-low-01",
+    "primary_text": "Varsity Tutors offers comprehensive SAT test preparation services with experienced tutors, flexible scheduling options, and a proven track record of student success. Our platform supports multiple learning styles and provides access to extensive practice materials.",
+    "headline": "SAT Test Preparation",
+    "description": "Comprehensive SAT prep with experienced tutors. Multiple scheduling options available.",
+    "cta": "Learn More",
+    "performance_tier": "low",
+    "notes": "Feature list with no emotion, corporate language, no specific claims, generic"
+  },
+  {
+    "id": "ref-low-02",
+    "primary_text": "Don't let the SAT hold your child back! Without proper preparation, they could miss out on their dream college. Our expert tutors are standing by to help. Don't wait — every day you delay is a day of lost potential. Act now before it's too late!",
+    "headline": "Don't Miss Your Chance!",
+    "description": "Expert SAT tutors ready to help your child succeed. Limited availability — act fast!",
+    "cta": "Sign Up",
+    "performance_tier": "low",
+    "notes": "Fear-mongering, pressure tactics, off-brand, manipulative urgency"
+  },
+  {
+    "id": "ref-low-03",
+    "primary_text": "Our comprehensive multi-faceted approach leverages cutting-edge pedagogical methodologies to synergistically enhance your child's standardized testing outcomes through personalized adaptive learning frameworks and data-driven assessment protocols.",
+    "headline": "Advanced Learning Solutions",
+    "description": "Leverage our pedagogical expertise for optimal standardized testing outcomes.",
+    "cta": "Learn More",
+    "performance_tier": "low",
+    "notes": "Pure jargon, incomprehensible, no clear offer, zero emotional connection"
+  },
+  {
+    "id": "ref-low-04",
+    "primary_text": "We have the best SAT tutors in the country. Our students always get the highest scores. We guarantee you will see improvement. Nobody does SAT prep better than us. Period.",
+    "headline": "The Best SAT Prep. Period.",
+    "description": "Guaranteed results from the top tutoring company in America.",
+    "cta": "Sign Up",
+    "performance_tier": "low",
+    "notes": "Arrogant, unsubstantiated claims, 'guarantee' without evidence, off-brand"
+  }
+]
