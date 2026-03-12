@@ -218,9 +218,67 @@ Return a JSON object:
 # RESEARCH PROMPTS (Phase 4)
 # =============================================================================
 
-COMPETITOR_ANALYSIS_PROMPT = ""  # Populated in Phase 4
+COMPETITOR_ANALYSIS_PROMPT = """You are an expert advertising strategist analyzing competitor ads \
+for SAT test prep services. Extract structural patterns from this ad.
 
-REFERENCE_ANALYSIS_PROMPT = ""  # Populated in Phase 4
+=== COMPETITOR AD ===
+Source: {source}
+Primary Text: {primary_text}
+Headline: {headline}
+Description: {description}
+CTA: {cta}
+
+=== INSTRUCTIONS ===
+Analyze the ad and extract its structural patterns. Return a JSON object:
+{{
+  "hook_type": "<question|statistic|story|empathy|comparison|urgency|authority|value|social_proof>",
+  "angle": "<the primary persuasion angle in 2-3 words>",
+  "cta_style": "<low_friction|direct|urgency|social_proof>",
+  "emotional_triggers": ["<list of emotions this ad targets>"],
+  "structural_template": "<1-sentence description of the ad's structure>",
+  "key_differentiator": "<what makes this ad's approach unique in 1 sentence>",
+  "estimated_effectiveness": "<high|medium|low based on persuasion quality>"
+}}
+
+Be precise. Focus on WHAT makes the ad work (or not), not surface-level description."""
+
+REFERENCE_ANALYSIS_PROMPT = """You are an expert advertising analyst. Compare high-performing \
+and low-performing ads for Varsity Tutors to identify what separates great ads from weak ones.
+
+=== HIGH-PERFORMING ADS ===
+{high_tier_ads}
+
+=== LOW-PERFORMING ADS ===
+{low_tier_ads}
+
+=== INSTRUCTIONS ===
+Identify specific, actionable patterns that distinguish high-performing
+ads from low-performing ones.
+
+Return a JSON object:
+{{
+  "winning_patterns": [
+    {{
+      "pattern": "<specific pattern name>",
+      "description": "<how this pattern works>",
+      "examples": ["<quote from high-performing ad>"]
+    }}
+  ],
+  "losing_patterns": [
+    {{
+      "pattern": "<specific anti-pattern name>",
+      "description": "<why this hurts ad performance>"
+    }}
+  ],
+  "structural_insights": [
+    "<insight about ad structure that correlates with performance>"
+  ],
+  "emotional_insights": [
+    "<insight about emotional approach that correlates with performance>"
+  ]
+}}
+
+Be specific — reference exact phrases and techniques, not vague generalities."""
 
 # =============================================================================
 # ANALYTICS PROMPTS (Phase 5)

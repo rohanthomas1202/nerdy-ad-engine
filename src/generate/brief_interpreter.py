@@ -113,6 +113,26 @@ class BriefInterpreter:
                         f"TOP PERFORMING HOOKS: {', '.join(top_hooks)}"
                     )
 
+            winning = self._taxonomy.get("winning_patterns", [])
+            if winning:
+                win_names = [
+                    w.get("pattern", "") for w in winning[:3] if isinstance(w, dict)
+                ]
+                if win_names:
+                    sections.append(
+                        f"WINNING PATTERNS: {', '.join(win_names)}"
+                    )
+
+            losing = self._taxonomy.get("losing_patterns", [])
+            if losing:
+                lose_names = [
+                    lp.get("pattern", "") for lp in losing[:3] if isinstance(lp, dict)
+                ]
+                if lose_names:
+                    sections.append(
+                        f"PATTERNS TO AVOID: {', '.join(lose_names)}"
+                    )
+
         enrichment = "\n".join(sections)
 
         return brief.model_copy(update={"enrichment_context": enrichment})

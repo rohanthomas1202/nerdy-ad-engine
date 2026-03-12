@@ -1,1 +1,252 @@
-[]
+[
+  {
+    "id": "comp-pr-01",
+    "source": "Princeton Review",
+    "primary_text": "The SAT is changing \u2014 are you ready? Our expert instructors have already updated every lesson, practice test, and strategy guide for the new digital SAT. Students in our program see an average 150+ point improvement. Start with a free practice test to see where you stand.",
+    "headline": "New SAT? We're Ready.",
+    "description": "Updated courses for the digital SAT. Free practice test included.",
+    "cta": "Learn More",
+    "channel": "Facebook",
+    "notes": "Timely hook (format change), specific claim (150+), free lead magnet"
+  },
+  {
+    "id": "comp-pr-02",
+    "source": "Princeton Review",
+    "primary_text": "Why do 96% of our students recommend us? Because we don't just teach the test \u2014 we teach students HOW to think through every question type. Our small-group classes (max 8 students) mean real attention, not a lecture hall. Join 2M+ students who chose Princeton Review.",
+    "headline": "96% Recommend Us",
+    "description": "Small classes. Big results. Join 2M+ successful students.",
+    "cta": "Sign Up",
+    "channel": "Instagram",
+    "notes": "Social proof (96%, 2M+), differentiation (small groups), authority"
+  },
+  {
+    "id": "comp-pr-03",
+    "source": "Princeton Review",
+    "primary_text": "Your child's SAT score could determine which colleges say yes. Don't leave it to chance. Princeton Review's proven system combines expert teaching, adaptive practice, and score guarantees. If your score doesn't improve, you retake for free.",
+    "headline": "Score Higher. Guaranteed.",
+    "description": "Expert SAT prep with a score improvement guarantee.",
+    "cta": "Get Started",
+    "channel": "Facebook",
+    "notes": "Stakes framing, guarantee as risk reversal, authority positioning"
+  },
+  {
+    "id": "comp-pr-04",
+    "source": "Princeton Review",
+    "primary_text": "SAT prep shouldn't feel like punishment. Our interactive online courses keep students engaged with game-like practice, real-time feedback, and instructors who actually make test prep fun. Because motivated students score higher.",
+    "headline": "SAT Prep Students Love",
+    "description": "Interactive online courses. Real-time feedback. Real results.",
+    "cta": "Try Free",
+    "channel": "Instagram",
+    "notes": "Reframes prep as enjoyable, student-focused, engagement angle"
+  },
+  {
+    "id": "comp-kaplan-01",
+    "source": "Kaplan",
+    "primary_text": "For 85+ years, Kaplan has helped millions of students achieve their testing goals. Our SAT prep combines decades of expertise with cutting-edge technology \u2014 adaptive learning that focuses on YOUR weak spots. Higher score or your money back.",
+    "headline": "85 Years of Test Prep",
+    "description": "Adaptive SAT prep backed by 85+ years of expertise. Money-back guarantee.",
+    "cta": "Learn More",
+    "channel": "Facebook",
+    "notes": "Heritage/authority (85 years), adaptive tech, money-back guarantee"
+  },
+  {
+    "id": "comp-kaplan-02",
+    "source": "Kaplan",
+    "primary_text": "Not sure where to start with SAT prep? Take our free diagnostic quiz and get a personalized study plan in minutes. No commitment, no pressure \u2014 just a clear picture of where you stand and exactly what to work on next.",
+    "headline": "Free SAT Diagnostic Quiz",
+    "description": "Get your personalized study plan in minutes. No commitment required.",
+    "cta": "Get Started",
+    "channel": "Facebook",
+    "notes": "Low-friction lead magnet, personalization promise, no-pressure tone"
+  },
+  {
+    "id": "comp-kaplan-03",
+    "source": "Kaplan",
+    "primary_text": "Live online. Self-paced. Tutoring. However your child learns best, Kaplan has an SAT prep option that fits. All plans include 2,000+ practice questions, 8 full-length practice tests, and on-demand video lessons. Flexible scheduling. Real results.",
+    "headline": "SAT Prep Your Way",
+    "description": "Multiple learning formats. 2,000+ practice questions. Flexible scheduling.",
+    "cta": "Learn More",
+    "channel": "Instagram",
+    "notes": "Flexibility angle, volume proof (2000+ questions), multiple formats"
+  },
+  {
+    "id": "comp-kaplan-04",
+    "source": "Kaplan",
+    "primary_text": "The students who score highest on the SAT aren't necessarily the smartest \u2014 they're the most prepared. Kaplan's proven strategies teach you to work smarter, not harder. Master timing, eliminate wrong answers, and approach every question with confidence.",
+    "headline": "Work Smarter on the SAT",
+    "description": "Proven strategies for higher scores. Learn to master timing and test tactics.",
+    "cta": "Sign Up",
+    "channel": "Facebook",
+    "notes": "Strategy/intelligence reframe, tactical approach, confidence building"
+  },
+  {
+    "id": "comp-kaplan-05",
+    "source": "Kaplan",
+    "primary_text": "Spring SAT is coming up fast. Our intensive 1-month bootcamp covers everything your child needs to know \u2014 from content review to test-day strategies. Limited spots available for our most popular program.",
+    "headline": "SAT Bootcamp: 1 Month",
+    "description": "Intensive SAT prep. Limited spots. Enroll before they fill up.",
+    "cta": "Book Now",
+    "channel": "Facebook",
+    "notes": "Urgency (spring, limited spots), intensive format, scarcity"
+  },
+  {
+    "id": "comp-khan-01",
+    "source": "Khan Academy",
+    "primary_text": "World-class SAT prep. 100% free. Khan Academy is the official practice partner of the College Board. Get personalized practice recommendations, full-length practice tests, and video lessons \u2014 all at no cost. Because great test prep shouldn't depend on your family's budget.",
+    "headline": "Free Official SAT Prep",
+    "description": "Official College Board partner. Personalized practice. Always free.",
+    "cta": "Get Started",
+    "channel": "Facebook",
+    "notes": "Free positioning, official partnership authority, equity message"
+  },
+  {
+    "id": "comp-khan-02",
+    "source": "Khan Academy",
+    "primary_text": "Students who complete 20+ hours of practice on Khan Academy see an average 115-point improvement on the SAT. That's real data from real students. Link your College Board account and get practice recommendations tailored to your PSAT results.",
+    "headline": "115-Point Average Gain",
+    "description": "Personalized SAT practice based on your PSAT results. Free forever.",
+    "cta": "Learn More",
+    "channel": "Instagram",
+    "notes": "Data-driven claim (115 pts), PSAT integration, personalization"
+  },
+  {
+    "id": "comp-khan-03",
+    "source": "Khan Academy",
+    "primary_text": "SAT prep that actually fits into your schedule. Practice for just 20 minutes a day on Khan Academy and watch your skills build over time. Our adaptive technology focuses on the exact areas where you need the most help. No classes. No commute. Just progress.",
+    "headline": "20 Minutes a Day",
+    "description": "Adaptive SAT practice that fits your schedule. Free on Khan Academy.",
+    "cta": "Get Started",
+    "channel": "Instagram",
+    "notes": "Minimal time commitment, convenience, adaptive technology"
+  },
+  {
+    "id": "comp-chegg-01",
+    "source": "Chegg",
+    "primary_text": "SAT prep shouldn't cost a fortune. Chegg's SAT prep gives you expert-created practice tests, detailed answer explanations, and score prediction tools \u2014 all for less than the cost of a single tutoring session. Study smarter with Chegg.",
+    "headline": "SAT Prep Under $15/mo",
+    "description": "Practice tests, answer explanations, and score predictions. From $14.95/mo.",
+    "cta": "Sign Up",
+    "channel": "Facebook",
+    "notes": "Price disruption angle, value comparison, budget-conscious appeal"
+  },
+  {
+    "id": "comp-chegg-02",
+    "source": "Chegg",
+    "primary_text": "Stuck on a practice problem? Chegg gives you step-by-step explanations for every answer \u2014 not just 'the answer is C.' Understand WHY so you can solve similar problems on test day. Plus, access expert Q&A for personalized help when you need it.",
+    "headline": "SAT Help When You Need It",
+    "description": "Step-by-step explanations. Expert Q&A. Understand the 'why' behind every answer.",
+    "cta": "Learn More",
+    "channel": "Instagram",
+    "notes": "Understanding vs memorization, on-demand help, student empowerment"
+  },
+  {
+    "id": "comp-chegg-03",
+    "source": "Chegg",
+    "primary_text": "Your SAT score is just one part of your college application \u2014 but it matters. Chegg helps you tackle the test with confidence through adaptive practice, video walkthroughs, and real-time progress tracking. See exactly where you stand before test day.",
+    "headline": "Track Your SAT Progress",
+    "description": "Adaptive practice and progress tracking. Know exactly where you stand.",
+    "cta": "Get Started",
+    "channel": "Facebook",
+    "notes": "Progress visibility, data-driven confidence, realistic framing"
+  },
+  {
+    "id": "comp-varsity-01",
+    "source": "Varsity Tutors (competitor reference)",
+    "primary_text": "Every student learns differently. That's not a slogan \u2014 it's the reason we match your child with a tutor who adapts to their specific learning style, pace, and goals. 1-on-1 SAT prep that's built for YOUR student, not a classroom average.",
+    "headline": "1-on-1 SAT Tutoring",
+    "description": "Matched to your child's learning style. First session free.",
+    "cta": "Try Free",
+    "channel": "Facebook",
+    "notes": "Personalization depth, anti-classroom positioning, free trial"
+  },
+  {
+    "id": "comp-magoosh-01",
+    "source": "Magoosh",
+    "primary_text": "SAT prep doesn't have to be stressful or expensive. Magoosh gives you 1,800+ practice questions, 200+ video lessons, and email support from expert tutors \u2014 all for a fraction of the cost of traditional prep. Study anywhere, anytime, on any device.",
+    "headline": "Affordable SAT Prep",
+    "description": "1,800+ questions. 200+ videos. Study anywhere. From $79 total.",
+    "cta": "Learn More",
+    "channel": "Facebook",
+    "notes": "Volume proof, price anchor, device flexibility, stress-free positioning"
+  },
+  {
+    "id": "comp-magoosh-02",
+    "source": "Magoosh",
+    "primary_text": "We guarantee a 100+ point SAT score improvement \u2014 or your money back. No fine print. Magoosh students see real results because our adaptive platform identifies exactly what you need to study and skips what you already know.",
+    "headline": "100+ Point Guarantee",
+    "description": "Score improvement guaranteed. Adaptive learning. Money back if we're wrong.",
+    "cta": "Get Started",
+    "channel": "Instagram",
+    "notes": "Score guarantee with specifics, adaptive tech, risk reversal"
+  },
+  {
+    "id": "comp-testive-01",
+    "source": "Testive",
+    "primary_text": "What if your child's SAT tutor also coached them on study habits, time management, and test-day mindset? Testive combines expert tutoring with personal coaching so students don't just learn the material \u2014 they learn how to perform under pressure.",
+    "headline": "Tutoring + Coaching",
+    "description": "SAT prep that goes beyond content. Build skills for test day and beyond.",
+    "cta": "Book Now",
+    "channel": "Facebook",
+    "notes": "Holistic approach, coaching angle, performance mindset, differentiation"
+  },
+  {
+    "id": "comp-testive-02",
+    "source": "Testive",
+    "primary_text": "Parents: you don't need to nag about SAT prep anymore. Testive's coaching team keeps your student accountable with weekly check-ins, progress reports, and personalized study plans. We handle the motivation so you can focus on being a parent.",
+    "headline": "We Handle the Nagging",
+    "description": "Weekly coaching + progress reports. You focus on being a parent.",
+    "cta": "Learn More",
+    "channel": "Instagram",
+    "notes": "Parent pain point (nagging), accountability outsourcing, humor"
+  },
+  {
+    "id": "comp-revolution-01",
+    "source": "Revolution Prep",
+    "primary_text": "Small group SAT classes with a max of 6 students. Every student gets attention. Every question gets answered. Our expert instructors teach proven strategies while keeping the energy high and the pressure low. Because learning should feel good.",
+    "headline": "Max 6 Students Per Class",
+    "description": "Small group SAT prep. Expert instructors. Proven strategies.",
+    "cta": "Sign Up",
+    "channel": "Facebook",
+    "notes": "Small group specificity (max 6), positive learning environment, energy"
+  },
+  {
+    "id": "comp-pr-05",
+    "source": "Princeton Review",
+    "primary_text": "Colleges see hundreds of applications with similar GPAs and extracurriculars. A strong SAT score makes your child's application impossible to ignore. Princeton Review students improve by an average of 140 points. Make sure your child stands out where it matters.",
+    "headline": "Stand Out to Colleges",
+    "description": "Average 140-point improvement. Make your application impossible to ignore.",
+    "cta": "Get Started",
+    "channel": "Facebook",
+    "notes": "Competitive admissions context, differentiation urgency, specific claim"
+  },
+  {
+    "id": "comp-kaplan-06",
+    "source": "Kaplan",
+    "primary_text": "What's your SAT target score? Tell us your goal, and we'll build a study plan that gets you there. Kaplan's smart technology adapts to your progress in real time \u2014 spending more time where you need it and less time on what you've mastered.",
+    "headline": "Set Your Target Score",
+    "description": "Goal-based SAT prep. Smart technology adapts to your progress.",
+    "cta": "Get Started",
+    "channel": "Instagram",
+    "notes": "Goal-setting hook, personalization, efficiency promise, tech angle"
+  },
+  {
+    "id": "comp-wyzant-01",
+    "source": "Wyzant",
+    "primary_text": "Find your perfect SAT tutor in minutes. Browse profiles, read reviews, and choose a tutor who fits your schedule and budget. No subscriptions. No commitments. Pay only for the sessions you book. 1-on-1 SAT help from $30/hour.",
+    "headline": "SAT Tutors from $30/hr",
+    "description": "Browse tutors. Read reviews. No subscription required.",
+    "cta": "Learn More",
+    "channel": "Facebook",
+    "notes": "Marketplace model, price transparency, no-commitment appeal, flexibility"
+  },
+  {
+    "id": "comp-wyzant-02",
+    "source": "Wyzant",
+    "primary_text": "Your child deserves more than a pre-recorded video lesson. Wyzant connects students with real human tutors for live, 1-on-1 SAT prep. Ask questions. Get answers. Build understanding. Over 65,000 certified tutors ready to help.",
+    "headline": "Real Tutors. Real Help.",
+    "description": "65,000+ certified tutors. Live 1-on-1 SAT prep. No subscriptions.",
+    "cta": "Get Started",
+    "channel": "Instagram",
+    "notes": "Anti-recorded-content positioning, human connection, volume proof (65k)"
+  }
+]

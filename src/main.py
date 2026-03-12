@@ -1,6 +1,7 @@
 """Orchestrator — entry point for the ad generation pipeline."""
 
 import json
+import sys
 import uuid
 from pathlib import Path
 
@@ -15,6 +16,9 @@ from src.iterate.targeted_editor import TargetedEditor
 from src.iterate.weakness_diagnostician import WeaknessDiagnostician
 from src.llm.client import GeminiClient
 from src.models import AdRecord, Brief
+from src.research.competitor_analyzer import CompetitorAnalyzer
+from src.research.pattern_taxonomy import PatternTaxonomy
+from src.research.reference_analyzer import ReferenceAnalyzer
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -213,9 +217,52 @@ class Pipeline:
         print(f"{'=' * 50}")
 
 
+    def run_research(self) -> dict:
+        """Run competitive intelligence: analyze competitor + reference ads, build taxonomy."""
+        print("\n" + "=" * 50)
+        print("COMPETITIVE INTELLIGENCE RESEARCH")
+        print("=" * 50)
+
+        # Analyze competitor ads
+        print("\nAnalyzing competitor ads...")
+        competitor_analyzer = CompetitorAnalyzer(self._client)
+        analyses, comp_usage = competitor_analyzer.analyze_batch()
+        print(f"  Analyzed {len(analyses)} competitor ads (${comp_usage.cost_usd:.4f})")
+
+        # Extract top patterns
+        top_patterns = CompetitorAnalyzer.extract_top_patterns(analyses)
+        print(f"  Extracted {len(top_patterns)} hook patterns")
+        for p in top_patterns[:5]:
+            print(f"    {p['type']}: {p['count']}x (effectiveness: {p['effectiveness_rate']:.0%})")
+
+        # Analyze reference ads
+        print("\nAnalyzing reference ad performance correlations...")
+        ref_analyzer = ReferenceAnalyzer(self._client)
+        ref_patterns, ref_usage = ref_analyzer.analyze_performance_correlations()
+        print(f"  Found {len(ref_patterns.get('winning_patterns', []))} winning patterns")
+        print(f"  Found {len(ref_patterns.get('losing_patterns', []))} anti-patterns")
+
+        # Build and save taxonomy
+        taxonomy = PatternTaxonomy.build(top_patterns, ref_patterns)
+        PatternTaxonomy.save(taxonomy)
+        print("\nTaxonomy saved to data/patterns/taxonomy.json")
+
+        total_cost = comp_usage.cost_usd + ref_usage.cost_usd
+        print(f"Research cost: ${total_cost:.4f}")
+        print("=" * 50)
+
+        return taxonomy
+
+
 def main():
+    research_mode = "--research" in sys.argv
+
     pipeline = Pipeline()
-    pipeline.run_batch()
+
+    if research_mode:
+        pipeline.run_research()
+    else:
+        pipeline.run_batch()
 
 
 if __name__ == "__main__":

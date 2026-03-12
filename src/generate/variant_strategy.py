@@ -1,7 +1,7 @@
 """Variant strategy — selects diverse hook/angle combinations for each brief.
 
 No LLM calls. Pure strategy logic ensuring 3 variants per brief use
-genuinely different approaches.
+genuinely different approaches. Optionally informed by competitive intelligence taxonomy.
 """
 
 from src.models import Brief
@@ -112,5 +112,47 @@ class VariantStrategy:
                 used_hooks.add(approach["hook_type"])
             if len(selected) >= count:
                 break
+
+        return selected
+
+    def select_from_taxonomy(
+        self, taxonomy: dict, brief: Brief, count: int = 3,
+    ) -> list[str]:
+        """Select approaches biased toward high-effectiveness patterns from taxonomy.
+
+        Falls back to default select_approaches if taxonomy is empty or has no hooks.
+        """
+        hooks = taxonomy.get("hooks", [])
+        if not hooks:
+            return self.select_approaches(brief, count)
+
+        # Sort taxonomy hooks by effectiveness_rate descending
+        ranked_hooks = sorted(
+            hooks,
+            key=lambda h: h.get("effectiveness_rate", 0.0),
+            reverse=True,
+        )
+
+        # Map taxonomy hook types to our APPROACHES
+        hook_to_approach = {a["hook_type"]: a for a in APPROACHES}
+
+        selected = []
+        used_hooks = set()
+        for hook_entry in ranked_hooks:
+            hook_type = hook_entry.get("type", "")
+            if hook_type in hook_to_approach and hook_type not in used_hooks:
+                selected.append(hook_to_approach[hook_type]["instruction"])
+                used_hooks.add(hook_type)
+            if len(selected) >= count:
+                break
+
+        # Fill remaining slots from default strategy if taxonomy didn't provide enough
+        if len(selected) < count:
+            defaults = self.select_approaches(brief, count)
+            for instruction in defaults:
+                if instruction not in selected:
+                    selected.append(instruction)
+                if len(selected) >= count:
+                    break
 
         return selected
