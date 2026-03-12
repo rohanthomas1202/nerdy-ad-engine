@@ -120,11 +120,99 @@ IMPORTANT CONSTRAINTS:
 # EDITING / DIAGNOSIS PROMPTS (Phase 3)
 # =============================================================================
 
-DIAGNOSIS_PROMPT = ""  # Populated in Phase 3
+DIAGNOSIS_PROMPT = """You are a senior ad quality analyst. An ad has been evaluated \
+and scored poorly on one dimension. Your job is to diagnose the SPECIFIC problem \
+and suggest a CONCRETE fix.
 
-EDITING_PROMPT = ""  # Populated in Phase 3
+=== AD COPY ===
+Primary Text: {primary_text}
+Headline: {headline}
+Description: {description}
+CTA: {cta}
 
-ESCALATION_GENERATION_PROMPT = ""  # Populated in Phase 3
+=== EVALUATION SCORES ===
+{dimension_scores}
+
+=== WEAKEST DIMENSION ===
+Dimension: {weakest_dimension}
+Score: {weakest_score}
+Evaluator's rationale: {weakest_rationale}
+
+=== INSTRUCTIONS ===
+Analyze WHY this dimension scored poorly. Be SPECIFIC — reference exact phrases \
+from the ad. Then suggest a CONCRETE fix that addresses the root cause.
+
+Return a JSON object:
+{{
+  "problem_description": "<2-3 sentences explaining the specific problem>",
+  "suggested_fix": "<2-3 sentences with concrete rewrite guidance>"
+}}
+
+BAD example: "Make it more emotional" (too vague)
+GOOD example: "The primary text uses only rational arguments about score \
+improvement. Add a parent-perspective opening that acknowledges the stress \
+of watching your child struggle with standardized tests."
+"""
+
+EDITING_PROMPT = """You are a surgical ad editor for Varsity Tutors by Nerdy. \
+You must fix a SPECIFIC weakness while preserving everything else.
+
+=== CURRENT AD ===
+Primary Text: {primary_text}
+Headline: {headline}
+Description: {description}
+CTA: {cta}
+
+=== DIAGNOSIS ===
+Weak dimension: {weakest_dimension}
+Problem: {problem_description}
+Suggested fix: {suggested_fix}
+
+=== PRESERVATION RULES ===
+These dimensions are scoring well — DO NOT regress them: {preserve_dimensions}
+
+=== INSTRUCTIONS ===
+Rewrite the ad to fix the diagnosed weakness. Follow the suggested fix closely.
+
+CRITICAL RULES:
+- Fix ONLY the weak dimension. Do not rewrite parts that are already working.
+- Keep the CTA the same unless the diagnosis specifically targets it.
+- Keep character limits: primary_text max 500, headline max 40, description max 125.
+- CTA must be one of: Learn More, Sign Up, Get Started, Book Now, Try Free.
+- Maintain Varsity Tutors brand voice: empowering, approachable, results-focused.
+
+Return a JSON object:
+{{
+  "primary_text": "<edited body copy>",
+  "headline": "<edited or unchanged headline>",
+  "description": "<edited or unchanged description>",
+  "cta": "<unchanged or fixed CTA>"
+}}"""
+
+ESCALATION_GENERATION_PROMPT = """The previous ad variant for this brief failed \
+after multiple editing attempts. Generate a COMPLETELY NEW ad with a different \
+angle that avoids the identified weakness.
+
+=== BRIEF ===
+Audience: {audience_segment}
+Product: {product}
+Campaign Goal: {campaign_goal}
+
+=== WHAT FAILED ===
+The previous attempts consistently scored poorly on: {failed_dimension}
+Root cause: {problem_description}
+
+=== INSTRUCTIONS ===
+Write a brand-new ad that takes a fundamentally different approach. \
+Specifically PRIORITIZE the dimension that previously failed.
+
+Return a JSON object:
+{{
+  "primary_text": "<new body copy, max 500 characters>",
+  "headline": "<new headline, max 40 characters>",
+  "description": "<new secondary text, max 125 characters>",
+  "cta": "<one of: Learn More, Sign Up, Get Started, Book Now, Try Free>"
+}}"""
 
 # =============================================================================
 # RESEARCH PROMPTS (Phase 4)
