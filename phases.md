@@ -485,7 +485,7 @@ Key components:
 
 ## PHASE 5: Analytics & Self-Healing — Quality Tracker, Token Tracker, Ratchet, Self-Healer
 
-**Status: [ ] NOT STARTED**
+**Status: [x] DONE** — 112 tests passing, 0 lint errors (2026-03-11)
 
 ### Dependencies
 Phase 3: full iteration pipeline producing AdRecords with iteration_history
@@ -591,7 +591,7 @@ Key components:
 
 ## PHASE 6: Scale & Polish — 100+ Ads, Dashboards, Decision Log, Demo Mode
 
-**Status: [ ] NOT STARTED**
+**Status: [x] DONE** — 123 tests passing, 0 lint errors (2026-03-11)
 
 ### Dependencies
 All of Phases 1-5. Integration, scale testing, documentation, presentation.
@@ -720,5 +720,5 @@ Until alignment reaches 80%+. This might take several hours of prompt engineerin
 | 2 | Generation Loop | 6 new, 2 modified | 19 | 62 | [x] DONE |
 | 3 | Feedback Loop | 4 new, 2 modified | 18 | 80 | [x] DONE |
 | 4 | Competitive Intel | 4 new, 4 modified | 14 | 94 | [x] DONE |
-| 5 | Analytics + Self-Heal | 6 new, 3 modified | ~18 | ~97 | [ ] |
-| 6 | Scale + Polish | 3 new, 3 modified | ~8 | ~105 | [ ] |
+| 5 | Analytics + Self-Heal | 6 new, 3 modified | 18 | 112 | [x] DONE |
+| 6 | Scale + Polish | 3 new, 3 modified | 11 | 123 | [x] DONE |

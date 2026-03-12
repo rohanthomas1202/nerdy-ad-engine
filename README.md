@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/badge/python-3.11+-blue?logo=python&logoColor=white" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/LLM-Gemini_2.5-orange?logo=google&logoColor=white" alt="Gemini 2.5">
   <img src="https://img.shields.io/badge/models-Pydantic_v2-e92063?logo=pydantic&logoColor=white" alt="Pydantic v2">
-  <img src="https://img.shields.io/badge/tests-62%2B_passing-brightgreen" alt="Tests">
+  <img src="https://img.shields.io/badge/tests-123_passing-brightgreen" alt="Tests">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
 </p>
 
@@ -19,48 +19,52 @@
 
 ## Overview
 
-Nerdy Ad Engine is an autonomous content generation pipeline built for **Varsity Tutors** SAT test prep advertising. It takes structured ad briefs as input, generates multiple creative variants using Gemini Flash, evaluates each variant across 5 quality dimensions using Gemini Pro, and routes results through a quality gate — all with full cost tracking.
+Nerdy Ad Engine is an autonomous content generation pipeline built for **Varsity Tutors** SAT test prep advertising. It takes structured ad briefs as input, generates multiple creative variants using Gemini Flash, evaluates each variant across 5 quality dimensions using Gemini Pro, iteratively improves failing ads through targeted editing, and routes results through a quality gate — all with full cost tracking and self-healing analytics.
 
 The system follows an **evaluator-centric architecture**: the quality evaluator was built and calibrated *before* the generator, ensuring a proven quality signal exists before scaling content production.
 
 ### How It Works
 
 ```
-                    ┌─────────────────────────────────────────────┐
-                    │              PIPELINE FLOW                  │
-                    │                                             │
-  briefs.yaml ──▶   Brief Interpreter (enrich with brand context) │
-                    │         │                                   │
-                    │         ▼                                   │
-                    │   Variant Strategy (3 diverse approaches)   │
-                    │         │                                   │
-                    │         ▼                                   │
-                    │   Writer (Gemini Flash → structured ad)     │
-                    │         │                                   │
-                    │         ▼                                   │
-                    │   Dimension Scorer (Gemini Pro → 5 scores)  │
-                    │         │                                   │
-                    │         ▼                                   │
-                    │   Quality Gate (≥ 7.0 → approved)           │
-                    │       ╱    ╲                                │
-                    │      ▼      ▼                               │
-                    │  ad_library  failed_ads                     │
-                    └─────────────────────────────────────────────┘
+  briefs.yaml ──▶ Brief Interpreter (enrich with brand + competitive context)
+                          │
+                          ▼
+                  Variant Strategy (3 diverse approaches)
+                          │
+                          ▼
+                  Writer (Gemini Flash → structured ad)
+                          │
+                          ▼
+                  Dimension Scorer (Gemini Pro → 5 scores)
+                          │
+                          ▼
+                  Quality Gate (≥ 7.0 → approved)
+                        ╱    ╲
+                  ✓ Pass      ✗ Fail
+                    │           │
+                    ▼           ▼
+              ad_library    Diagnose → Edit → Re-evaluate (up to 3x)
+                                │
+                          ╱          ╲
+                    Rescued        Abandoned
+                  (approved)     (failed_ads)
 ```
 
 ## Features
 
 - **Multi-variant generation** — 3 diverse ad variants per brief using audience-weighted hook selection (question, statistic, story, empathy, urgency, and more)
 - **5-dimension quality evaluation** — Clarity, Value Proposition, Call-to-Action, Brand Voice, and Emotional Resonance — each with calibrated rubrics and weighted scoring
-- **Quality gate routing** — Ads scoring ≥ 7.0/10 are approved; below-threshold ads are flagged with their weakest dimension for targeted improvement
+- **Quality gate routing** — Ads scoring >= 7.0/10 are approved; below-threshold ads enter the iteration loop
+- **Targeted iteration** — Dimension-level weakness diagnosis, surgical editing with preservation rules, and 3-strike escalation (continue → escalate → abandon)
+- **Competitive intelligence** — Pattern extraction from 20+ competitor ads, taxonomy of hooks/CTAs/angles integrated into generation
+- **Analytics & self-healing** — Quality trend tracking, regression detection, auto-threshold ratcheting, cost-per-ad and quality-per-dollar metrics
+- **Error resilience** — Single ad failures don't crash the batch; errors are logged with full context
 - **Config-driven pipeline** — Briefs, brand guidelines, dimensions, model settings, and thresholds all live in YAML configuration
 - **Full cost tracking** — Per-request token counting and USD cost accumulation across the entire pipeline
 - **Typed data contracts** — Pydantic v2 models for all data structures ensure validated, structured LLM output parsing
-- **Rate-limited LLM client** — Built-in retry logic for rate limits and 4-second inter-request throttling
+- **Demo mode** — Quick 3-5 minute walkthrough showcasing the full pipeline
 
 ## Demo
-
-<!-- Add screenshots or GIF of pipeline output here -->
 
 <details>
 <summary>Sample Approved Ad (score: 7.57/10)</summary>
@@ -78,7 +82,7 @@ Dimension Scores:
   Brand Voice .......... 8.5
   Emotional Resonance .. 8.8
   ─────────────────────────
-  Aggregate ............ 7.57  ✓ APPROVED
+  Aggregate ............ 7.57  APPROVED
 
 Cost: $0.006
 ```
@@ -110,26 +114,59 @@ cp .env.example .env
 ### Verify Installation
 
 ```bash
-make test    # Run 62+ tests
+make test    # Run 123 tests
 make lint    # Check code quality with ruff
 ```
 
 ## Usage
 
-### Generate Ads
+### CLI Commands
 
 ```bash
-make run
+# Generate ads from all briefs (35 briefs x 3 variants = 105 ads)
+python3 -m src.main
+
+# Limit the number of ads generated
+python3 -m src.main --count 30
+
+# Run multiple cycles with analytics between each
+python3 -m src.main --cycles 5
+
+# Full production run (105 ads x 7 cycles)
+python3 -m src.main --count 120 --cycles 7
+
+# Demo mode — quick walkthrough
+python3 -m src.main --demo
+
+# Competitive intelligence research
+python3 -m src.main --research
+
+# Custom output directory and seed
+python3 -m src.main --output-dir results/ --seed 99
 ```
 
-This processes all briefs in `config/briefs.yaml`, generates 3 variants per brief, evaluates each, and saves results to the `output/` directory.
+### CLI Flags
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--count N` | all briefs | Maximum number of ads to generate |
+| `--cycles N` | 1 | Number of generation cycles |
+| `--seed N` | 42 | Random seed for reproducibility |
+| `--demo` | off | Run in demo mode (quick walkthrough) |
+| `--research` | off | Run competitive intelligence research |
+| `--output-dir` | `output/` | Output directory for results |
+| `--port` | 8020 | Dashboard port (range: 8020-8030) |
 
 ### Output Files
 
 | File | Description |
 |------|-------------|
-| `output/ad_library.json` | All approved ads (score ≥ 7.0) with full evaluation details |
-| `output/failed_ads.json` | Ads that didn't pass the quality gate |
+| `output/ad_library.json` | Approved ads with full evaluation details |
+| `output/failed_ads.json` | Failed ads with iteration history and error messages |
+| `output/quality_trends.png` | Per-dimension quality trends across cycles |
+| `output/cost_dashboard.png` | Cost breakdown and quality-per-dollar metrics |
+| `output/experiment_log.json` | Per-cycle experiment log with metrics |
+| `output/calibration_report.json` | Evaluator calibration alignment report |
 
 ### Programmatic Usage
 
@@ -138,14 +175,14 @@ from src.main import Pipeline
 
 pipeline = Pipeline()
 
-# Process a single brief
-record = pipeline.run_single(brief_id="sat-parent-conversion-01")
-
 # Process all briefs
 results = pipeline.run_batch()
 
+# Run with analytics across multiple cycles
+results = pipeline.run_cycles(num_cycles=5)
+
 # Check costs
-print(f"Total cost: ${pipeline.client.total_cost:.4f}")
+print(f"Total cost: ${pipeline._client.total_cost:.4f}")
 ```
 
 ## Project Structure
@@ -155,32 +192,47 @@ nerdy-ad-engine/
 ├── config/
 │   ├── settings.yaml          # Model config, thresholds, cost rates
 │   ├── dimensions.yaml        # 5 evaluation dimensions with rubrics
-│   ├── briefs.yaml            # 12 ad briefs (audience, product, goal)
+│   ├── briefs.yaml            # 35 ad briefs (audience, product, goal)
 │   └── brand_guidelines.yaml  # Brand voice, tone, audience triggers
 ├── data/
 │   ├── reference_ads.json     # Calibration reference ads (high/mid/low)
-│   ├── competitor_ads.json    # Competitive intel (Phase 4)
+│   ├── competitor_ads.json    # 20+ competitor ads for analysis
 │   └── patterns/
-│       └── taxonomy.json      # Pattern extraction (Phase 4)
+│       └── taxonomy.json      # Extracted pattern taxonomy
 ├── src/
 │   ├── main.py                # Pipeline orchestrator — entry point
+│   ├── demo.py                # Demo mode walkthrough
 │   ├── models.py              # Pydantic data contracts
 │   ├── llm/
 │   │   ├── client.py          # Unified Gemini client (Flash + Pro)
 │   │   └── prompts.py         # Prompt template library
 │   ├── generate/
 │   │   ├── brief_interpreter.py   # Config-driven brief enrichment
-│   │   ├── writer.py              # Ad copy generation
+│   │   ├── writer.py              # Ad copy generation (Gemini Flash)
 │   │   └── variant_strategy.py    # Diverse approach selection
 │   ├── evaluate/
-│   │   ├── dimension_scorer.py    # 5-dimension quality scoring
+│   │   ├── dimension_scorer.py    # 5-dimension scoring (Gemini Pro)
 │   │   ├── aggregator.py          # Weighted score aggregation
 │   │   ├── calibrator.py          # Evaluator calibration
 │   │   └── quality_gate.py        # Pass/fail routing
-│   ├── iterate/                   # Phase 3 — feedback loops
-│   ├── research/                  # Phase 4 — competitive intel
-│   └── analytics/                 # Phase 5 — tracking & self-healing
-├── tests/                     # 62+ tests across 13 modules
+│   ├── iterate/
+│   │   ├── weakness_diagnostician.py  # Dimension-level diagnosis
+│   │   ├── targeted_editor.py        # Surgical editing (Gemini Pro)
+│   │   └── escalation.py             # 3-strike escalation logic
+│   ├── research/
+│   │   ├── competitor_analyzer.py     # Competitor ad analysis
+│   │   ├── reference_analyzer.py      # Performance correlation
+│   │   └── pattern_taxonomy.py        # Pattern extraction & storage
+│   └── analytics/
+│       ├── quality_tracker.py     # Per-dimension trend tracking
+│       ├── token_tracker.py       # Cost analytics & quality-per-dollar
+│       ├── quality_ratchet.py     # Auto-threshold ratcheting
+│       ├── self_healer.py         # Regression detection & diagnosis
+│       └── experiment_logger.py   # Structured experiment history
+├── docs/
+│   ├── decision_log.md        # Engineering decisions & trade-offs
+│   └── limitations.md         # Honest limitations assessment
+├── tests/                     # 123 tests across 25 modules
 ├── output/                    # Generated artifacts
 ├── Makefile                   # Build commands
 ├── requirements.txt           # Python dependencies
@@ -201,6 +253,8 @@ nerdy-ad-engine/
 | Setting | Default | Description |
 |---------|---------|-------------|
 | `quality_threshold` | `7.0` | Minimum aggregate score for approval |
+| `max_edit_attempts` | `3` | Max iteration attempts per ad |
+| `variants_per_brief` | `3` | Number of variants per brief |
 | `generation_model` | `gemini-2.5-flash` | Model for ad copy generation |
 | `evaluation_model` | `gemini-2.5-pro` | Model for quality evaluation |
 | `generation_temperature` | `0.8` | Creativity level for generation |
@@ -238,7 +292,9 @@ All pipeline data flows through Pydantic v2 models:
 | `AdCopy` | Generated ad (primary text, headline, description, CTA) |
 | `DimensionScore` | Single dimension evaluation (score, rationale, confidence) |
 | `EvaluationResult` | Full 5-dimension evaluation with aggregate score |
-| `AdRecord` | Complete pipeline output — ad + evaluation + metadata + cost |
+| `AdRecord` | Complete pipeline output — ad + evaluation + iteration history + cost |
+| `Diagnosis` | Dimension-level weakness diagnosis for targeted editing |
+| `ExperimentEntry` | Structured experiment log entry with before/after metrics |
 
 ### Cost Economics
 
@@ -247,6 +303,14 @@ All pipeline data flows through Pydantic v2 models:
 | Generate 1 ad variant | Gemini Flash | ~$0.0001 |
 | Evaluate 1 ad | Gemini Pro | ~$0.006 |
 | Full pipeline (1 brief, 3 variants) | Both | ~$0.02 |
+| Full production run (105 ads, 7 cycles) | Both | ~$1-3 |
+
+## Documentation
+
+- [Architecture](architecture.md) — System architecture deep-dive
+- [Phases](phases.md) — Phased implementation roadmap (all 6 phases complete)
+- [Decision Log](docs/decision_log.md) — Engineering decisions, trade-offs, and failed experiments
+- [Limitations](docs/limitations.md) — Honest assessment of known limitations and future directions
 
 ## Contributing
 
@@ -264,7 +328,7 @@ Contributions are welcome! Here's how to get started:
 
 ```bash
 make install   # Install dependencies
-make test      # Run all tests
+make test      # Run all 123 tests
 make lint      # Run ruff linter
 make run       # Execute the pipeline
 make clean     # Remove caches and output artifacts
@@ -274,12 +338,12 @@ make clean     # Remove caches and output artifacts
 
 | Phase | Status | Description |
 |-------|--------|-------------|
-| **Phase 1** | ✅ Done | Foundation — models, LLM client, evaluator, calibration |
-| **Phase 2** | ✅ Done | Generation loop — brief interpreter, writer, variant strategy, pipeline |
-| **Phase 3** | ⏳ Next | Feedback loop — weakness diagnosis, targeted editing, escalation logic |
-| **Phase 4** | 📋 Planned | Competitive intelligence — pattern extraction from competitor ads |
-| **Phase 5** | 📋 Planned | Analytics & self-healing — quality trends, token economics, auto-calibration |
-| **Phase 6** | 📋 Planned | Scale — 100+ ads per run, demo mode, decision logging |
+| **Phase 1** | Done | Foundation — models, LLM client, evaluator, calibration |
+| **Phase 2** | Done | Generation loop — brief interpreter, writer, variant strategy, pipeline |
+| **Phase 3** | Done | Feedback loop — weakness diagnosis, targeted editing, escalation logic |
+| **Phase 4** | Done | Competitive intelligence — pattern extraction from competitor ads |
+| **Phase 5** | Done | Analytics & self-healing — quality trends, token economics, auto-ratchet |
+| **Phase 6** | Done | Scale & polish — 100+ ads, demo mode, decision log, error resilience |
 
 See [phases.md](phases.md) for detailed phase specifications and success criteria.
 
@@ -294,5 +358,5 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 ---
 
 <p align="center">
-  Built with Gemini 2.5 &middot; Evaluated before generated &middot; Quality over quantity
+  Built with Gemini 2.5 · Evaluated before generated · Quality over quantity
 </p>

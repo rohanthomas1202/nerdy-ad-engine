@@ -13,7 +13,7 @@ run:
 	python -m src.main
 
 demo:
-	@echo "Demo mode not yet implemented (Phase 6)"
+	python -m src.main --demo
 
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null; true
