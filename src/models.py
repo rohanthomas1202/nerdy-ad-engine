@@ -65,6 +65,7 @@ class AdRecord(BaseModel):
     evaluation: EvaluationResult | None = None
     iteration_history: list[EvaluationResult] = Field(default_factory=list)
     status: Literal["draft", "approved", "failed"] = "draft"
+    cycle: int = 0
     generation_cost_usd: float = 0.0
     evaluation_cost_usd: float = 0.0
     total_cost_usd: float = 0.0

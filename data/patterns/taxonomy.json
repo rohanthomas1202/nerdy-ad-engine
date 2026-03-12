@@ -1,1 +1,100 @@
-{}
+{
+  "hooks": [
+    {
+      "type": "empathy",
+      "frequency": 7,
+      "effectiveness_rate": 1.0
+    },
+    {
+      "type": "question",
+      "frequency": 6,
+      "effectiveness_rate": 1.0
+    },
+    {
+      "type": "value",
+      "frequency": 5,
+      "effectiveness_rate": 1.0
+    },
+    {
+      "type": "comparison",
+      "frequency": 3,
+      "effectiveness_rate": 1.0
+    },
+    {
+      "type": "authority",
+      "frequency": 2,
+      "effectiveness_rate": 1.0
+    },
+    {
+      "type": "urgency",
+      "frequency": 1,
+      "effectiveness_rate": 1.0
+    },
+    {
+      "type": "statistic",
+      "frequency": 1,
+      "effectiveness_rate": 1.0
+    }
+  ],
+  "winning_patterns": [
+    {
+      "pattern": "Empathize, then Solve",
+      "description": "High-performing ads start by acknowledging the parent's specific emotional pain point (stress, worry) before introducing the solution. This builds rapport and shows the brand understands the customer's problem.",
+      "examples": [
+        "You've watched your child stress over practice tests, wondering if they'll ever feel ready.",
+        "The SAT doesn't test how smart your child is \u2014 it tests how prepared they are."
+      ]
+    },
+    {
+      "pattern": "Quantify the Outcome",
+      "description": "Using specific, impressive numbers makes the core benefit tangible, credible, and easy to grasp. This provides concrete proof of effectiveness that vague claims cannot match.",
+      "examples": [
+        "Students who work with Varsity Tutors improve their SAT scores by an average of 200+ points."
+      ]
+    },
+    {
+      "pattern": "Frame as 'Personalized,' Contrast with 'Generic'",
+      "description": "Successful ads repeatedly emphasize the tailored, 1-on-1 nature of the tutoring. They strengthen this point by explicitly contrasting it with negative alternatives like 'cookie-cutter programs' or 'one-size-fits-all' to highlight the unique value.",
+      "examples": [
+        "No cookie-cutter programs. No overwhelming class sizes. Just 1-on-1 support designed around how they learn best.",
+        "every session is tailored to their weak areas \u2014 not a one-size-fits-all curriculum."
+      ]
+    },
+    {
+      "pattern": "Focus on a Tangible Benefit",
+      "description": "The copy and headlines focus on the result or feeling the customer will get (e.g., confidence, higher scores, efficiency) rather than just describing the service itself.",
+      "examples": [
+        "SAT Prep That Builds Confidence",
+        "Prep Smarter, Not Harder"
+      ]
+    }
+  ],
+  "losing_patterns": [
+    {
+      "pattern": "Feature Listing",
+      "description": "Simply listing service features like 'experienced tutors' or 'flexible scheduling' is generic and fails to communicate the value or benefit. It answers 'what is it?' instead of the more important question, 'what's in it for me?'."
+    },
+    {
+      "pattern": "Corporate Jargon",
+      "description": "Using complex, buzzword-heavy language like 'leverages cutting-edge pedagogical methodologies' or 'synergistically enhance' alienates and confuses the target audience of parents. Clear, simple language is always more effective."
+    },
+    {
+      "pattern": "Aggressive Fear-Mongering",
+      "description": "Focusing excessively on negative consequences ('miss out on their dream college,' 'before it's too late!') creates anxiety and can feel manipulative, which hurts brand trust. It's less effective than inspiring hope and confidence."
+    },
+    {
+      "pattern": "Unsubstantiated Boasting",
+      "description": "Making vague, arrogant claims like 'the best tutors' or 'highest scores' without proof comes across as untrustworthy. Specificity and evidence are far more persuasive than empty bragging."
+    }
+  ],
+  "structural_insights": [
+    "Winning headlines state a specific, desirable outcome ('200+ Point SAT Improvement', 'Builds Confidence') while losing headlines just label the service ('SAT Test Preparation') or use vague phrases ('Don't Miss Your Chance!').",
+    "High-performing ads use direct, action-oriented CTAs like 'Try Free', 'Book Now', or 'Get Started'. Low-performing ads use passive, low-commitment CTAs like 'Learn More' or higher-friction ones like 'Sign Up'.",
+    "The most effective ad copy follows a 'Problem-Agitate-Solve' structure, starting with an empathetic understanding of the parent's problem before presenting the tutoring as the solution."
+  ],
+  "emotional_insights": [
+    "Winning ads tap into emotions of hope, confidence, and relief. They position the service as a way to alleviate a parent's anxiety and empower their child.",
+    "Losing ads either fail to connect emotionally by being too sterile and feature-focused, or they connect negatively by inducing fear, anxiety, and pressure.",
+    "The most effective emotional appeal is empathy ('We understand your child's stress') rather than accusation or fear ('Don't let your child fail')."
+  ]
+}

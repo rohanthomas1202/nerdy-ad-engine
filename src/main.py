@@ -15,7 +15,12 @@ from src.iterate.escalation import EscalationManager
 from src.iterate.targeted_editor import TargetedEditor
 from src.iterate.weakness_diagnostician import WeaknessDiagnostician
 from src.llm.client import GeminiClient
-from src.models import AdRecord, Brief
+from src.analytics.experiment_logger import ExperimentLogger
+from src.analytics.quality_ratchet import QualityRatchet
+from src.analytics.quality_tracker import QualityTracker
+from src.analytics.self_healer import SelfHealer
+from src.analytics.token_tracker import TokenTracker
+from src.models import AdRecord, Brief, ExperimentEntry
 from src.research.competitor_analyzer import CompetitorAnalyzer
 from src.research.pattern_taxonomy import PatternTaxonomy
 from src.research.reference_analyzer import ReferenceAnalyzer
@@ -217,6 +222,103 @@ class Pipeline:
         print(f"{'=' * 50}")
 
 
+    def run_cycles(self, num_cycles: int = 1) -> list[AdRecord]:
+        """Run the pipeline for multiple cycles with analytics.
+
+        Each cycle processes all briefs. After each cycle:
+        - Track quality trends
+        - Check for regressions → self-heal
+        - Check quality ratchet
+        - Log experiment
+        - Generate charts after all cycles
+        """
+        briefs = self._interpreter.load_briefs()
+        all_records: list[AdRecord] = []
+
+        quality_tracker = QualityTracker()
+        token_tracker = TokenTracker()
+        ratchet = QualityRatchet(self._gate._threshold)
+        healer = SelfHealer(self._client)
+        logger = ExperimentLogger()
+
+        for cycle in range(1, num_cycles + 1):
+            print(f"\n{'=' * 50}")
+            print(f"CYCLE {cycle}/{num_cycles}")
+            print(f"{'=' * 50}")
+
+            cycle_records = []
+            for i, brief in enumerate(briefs):
+                print(f"\n  Brief {i + 1}/{len(briefs)}: {brief.id}")
+                records = self.run_single_brief(brief)
+                for r in records:
+                    r.cycle = cycle
+                cycle_records.extend(records)
+
+            all_records.extend(cycle_records)
+            self.save_results(all_records)
+
+            # Analytics
+            trends = quality_tracker.track(all_records)
+            cost_summary = token_tracker.summarize(
+                all_records, self._client.usage_log,
+            )
+
+            # Check regressions
+            regressions = quality_tracker.detect_regressions(trends)
+            if regressions:
+                print(f"\n  ⚠ Regressions detected in cycle {cycle}:")
+                for reg in regressions:
+                    print(
+                        f"    {reg['dimension']}: "
+                        f"{reg['previous_avg']:.2f} → "
+                        f"{reg['current_avg']:.2f} "
+                        f"(drop: {reg['drop']:.2f})"
+                    )
+                heal_results = healer.heal(regressions, cycle_records)
+                for h in heal_results:
+                    print(f"    Fix for {h['dimension']}: {h['fix'][:80]}...")
+
+            # Check ratchet
+            new_threshold, did_ratchet = ratchet.check_ratchet(trends)
+            if did_ratchet:
+                self._gate._threshold = new_threshold
+                print(
+                    f"\n  Quality ratchet raised threshold to {new_threshold:.1f}"
+                )
+
+            # Log experiment
+            cycle_trends = trends.get("per_cycle", {}).get(cycle, {})
+            entry = ExperimentEntry(
+                id=f"cycle-{cycle}",
+                hypothesis=f"Cycle {cycle} generation with threshold {ratchet.threshold:.1f}",
+                change=f"Cycle {cycle} of {num_cycles}",
+                result=(
+                    f"Score: {cycle_trends.get('avg_score', 0):.2f}, "
+                    f"Approved: {cycle_trends.get('approved', 0)}/{cycle_trends.get('count', 0)}"
+                ),
+                metrics_after={
+                    "avg_score": cycle_trends.get("avg_score", 0),
+                    "pass_rate": trends.get("pass_rate", 0),
+                    "total_cost": cost_summary.get("total_cost", 0),
+                    "quality_per_dollar": cost_summary.get("quality_per_dollar", 0),
+                },
+            )
+            logger.log_experiment(entry)
+
+            self._print_summary(cycle_records)
+
+        # Generate charts after all cycles
+        trends = quality_tracker.track(all_records)
+        cost_summary = token_tracker.summarize(
+            all_records, self._client.usage_log,
+        )
+        quality_tracker.plot_trends(trends)
+        token_tracker.plot_cost_dashboard(cost_summary)
+        print("\nCharts saved to output/quality_trends.png and output/cost_dashboard.png")
+        print(f"Experiment log: {logger.summary()}")
+
+        return all_records
+
     def run_research(self) -> dict:
         """Run competitive intelligence: analyze competitor + reference ads, build taxonomy."""
         print("\n" + "=" * 50)
@@ -257,10 +359,19 @@ class Pipeline:
 def main():
     research_mode = "--research" in sys.argv
 
+    # Parse --cycles N
+    num_cycles = 1
+    args = sys.argv[1:]
+    for i, arg in enumerate(args):
+        if arg == "--cycles" and i + 1 < len(args):
+            num_cycles = int(args[i + 1])
+
     pipeline = Pipeline()
 
     if research_mode:
         pipeline.run_research()
+    elif num_cycles > 1:
+        pipeline.run_cycles(num_cycles)
     else:
         pipeline.run_batch()
 

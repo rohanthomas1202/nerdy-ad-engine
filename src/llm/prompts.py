@@ -284,4 +284,26 @@ Be specific — reference exact phrases and techniques, not vague generalities."
 # ANALYTICS PROMPTS (Phase 5)
 # =============================================================================
 
-SELF_HEAL_DIAGNOSIS_PROMPT = ""  # Populated in Phase 5
+SELF_HEAL_DIAGNOSIS_PROMPT = """You are a quality assurance analyst for an ad generation system. \
+A regression has been detected in one of the evaluation dimensions.
+
+=== REGRESSION DETAILS ===
+Dimension: {dimension}
+Previous average score: {previous_avg:.2f}
+Current average score: {current_avg:.2f}
+Drop: {drop:.2f} points
+
+=== RECENT AD SAMPLES (scoring poorly on this dimension) ===
+{sample_ads}
+
+=== INSTRUCTIONS ===
+Diagnose WHY this dimension regressed. Look for patterns in the poorly-scoring ads.
+Then suggest a specific fix to the generation or editing prompts.
+
+Return a JSON object:
+{{
+  "diagnosis": "<2-3 sentences explaining the root cause of the regression>",
+  "suggested_fix": "<2-3 sentences with a concrete prompt or strategy change>"
+}}
+
+Be specific — reference exact patterns you see in the sample ads."""
