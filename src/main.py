@@ -1,10 +1,17 @@
 """Orchestrator — entry point for the ad generation pipeline."""
 
+import argparse
 import json
+import random
 import sys
 import uuid
 from pathlib import Path
 
+from src.analytics.experiment_logger import ExperimentLogger
+from src.analytics.quality_ratchet import QualityRatchet
+from src.analytics.quality_tracker import QualityTracker
+from src.analytics.self_healer import SelfHealer
+from src.analytics.token_tracker import TokenTracker
 from src.evaluate.aggregator import Aggregator
 from src.evaluate.dimension_scorer import DimensionScorer
 from src.evaluate.quality_gate import QualityGate
@@ -15,11 +22,6 @@ from src.iterate.escalation import EscalationManager
 from src.iterate.targeted_editor import TargetedEditor
 from src.iterate.weakness_diagnostician import WeaknessDiagnostician
 from src.llm.client import GeminiClient
-from src.analytics.experiment_logger import ExperimentLogger
-from src.analytics.quality_ratchet import QualityRatchet
-from src.analytics.quality_tracker import QualityTracker
-from src.analytics.self_healer import SelfHealer
-from src.analytics.token_tracker import TokenTracker
 from src.models import AdRecord, Brief, ExperimentEntry
 from src.research.competitor_analyzer import CompetitorAnalyzer
 from src.research.pattern_taxonomy import PatternTaxonomy
@@ -31,7 +33,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 class Pipeline:
     """Orchestrates the full generate → evaluate → iterate → route pipeline."""
 
-    def __init__(self, client: GeminiClient | None = None):
+    def __init__(self, client: GeminiClient | None = None, output_dir: Path | None = None):
         self._client = client or GeminiClient()
         self._interpreter = BriefInterpreter()
         self._writer = Writer(self._client)
@@ -42,6 +44,7 @@ class Pipeline:
         self._diagnostician = WeaknessDiagnostician(self._client)
         self._editor = TargetedEditor(self._client)
         self._escalation = EscalationManager()
+        self._output_dir = output_dir or PROJECT_ROOT / "output"
 
     def run_single_brief(self, brief: Brief) -> list[AdRecord]:
         """Process a single brief: enrich → generate 3 variants → evaluate → iterate."""
@@ -50,21 +53,34 @@ class Pipeline:
 
         records = []
         for i, approach in enumerate(approaches):
-            record = self._generate_and_evaluate(enriched, approach, i)
+            try:
+                record = self._generate_and_evaluate(enriched, approach, i)
 
-            # Iterate on failing ads
-            if record.status != "approved":
-                record = self._iterate_ad(record, enriched)
+                # Iterate on failing ads
+                if record.status != "approved":
+                    record = self._iterate_ad(record, enriched)
 
-            records.append(record)
-            status_label = record.status.upper()
-            edits = len(record.iteration_history) - 1 if record.iteration_history else 0
-            edit_info = f" ({edits} edits)" if edits > 0 else ""
-            print(
-                f"  Variant {i + 1}/{len(approaches)}: "
-                f"score={record.evaluation.aggregate_score:.2f} "
-                f"[{status_label}]{edit_info}"
-            )
+                records.append(record)
+                status_label = record.status.upper()
+                edits = len(record.iteration_history) - 1 if record.iteration_history else 0
+                edit_info = f" ({edits} edits)" if edits > 0 else ""
+                print(
+                    f"  Variant {i + 1}/{len(approaches)}: "
+                    f"score={record.evaluation.aggregate_score:.2f} "
+                    f"[{status_label}]{edit_info}"
+                )
+            except Exception as e:
+                # Single ad failure doesn't crash the batch
+                print(f"  Variant {i + 1}/{len(approaches)}: ERROR — {e}")
+                error_record = AdRecord(
+                    id=f"{brief.id}-v{i}-error",
+                    brief_id=brief.id,
+                    variant_index=i,
+                    ad_copy=_placeholder_ad(),
+                    status="failed",
+                    error_message=str(e),
+                )
+                records.append(error_record)
 
         return records
 
@@ -160,14 +176,34 @@ class Pipeline:
         record.status = "failed"
         return record
 
-    def run_batch(self, briefs: list[Brief] | None = None) -> list[AdRecord]:
-        """Run the pipeline for a batch of briefs."""
+    def run_batch(
+        self,
+        briefs: list[Brief] | None = None,
+        count: int | None = None,
+    ) -> list[AdRecord]:
+        """Run the pipeline for a batch of briefs.
+
+        Args:
+            briefs: Explicit list of briefs. If None, loads from config.
+            count: Max number of ads to generate. If None, processes all briefs.
+        """
         if briefs is None:
             briefs = self._interpreter.load_briefs()
 
+        # If count is set, limit the number of briefs processed
+        # Each brief produces ~3 variants, so divide accordingly
+        if count is not None:
+            max_briefs = max(1, (count + 2) // 3)
+            briefs = briefs[:max_briefs]
+
         all_records = []
+        total_briefs = len(briefs)
         for i, brief in enumerate(briefs):
-            print(f"\nBrief {i + 1}/{len(briefs)}: {brief.id}")
+            approved_so_far = sum(1 for r in all_records if r.status == "approved")
+            print(
+                f"\nBrief {i + 1}/{total_briefs}: {brief.id}  "
+                f"[{len(all_records)} ads, {approved_so_far} approved]"
+            )
             records = self.run_single_brief(brief)
             all_records.extend(records)
 
@@ -177,16 +213,15 @@ class Pipeline:
 
     def save_results(self, records: list[AdRecord]) -> None:
         """Save approved and failed ads to output JSON files."""
-        output_dir = PROJECT_ROOT / "output"
-        output_dir.mkdir(exist_ok=True)
+        self._output_dir.mkdir(parents=True, exist_ok=True)
 
         approved = [r.model_dump(mode="json") for r in records if r.status == "approved"]
         failed = [r.model_dump(mode="json") for r in records if r.status != "approved"]
 
-        with open(output_dir / "ad_library.json", "w") as f:
+        with open(self._output_dir / "ad_library.json", "w") as f:
             json.dump(approved, f, indent=2, default=str)
 
-        with open(output_dir / "failed_ads.json", "w") as f:
+        with open(self._output_dir / "failed_ads.json", "w") as f:
             json.dump(failed, f, indent=2, default=str)
 
     def _print_summary(self, records: list[AdRecord]) -> None:
@@ -207,6 +242,7 @@ class Pipeline:
             1 for r in records
             if r.status == "approved" and len(r.iteration_history) > 1
         )
+        errors = sum(1 for r in records if r.error_message)
 
         print(f"\n{'=' * 50}")
         print("PIPELINE SUMMARY")
@@ -215,14 +251,15 @@ class Pipeline:
         if total:
             print(f"Approved:      {approved} ({approved / total * 100:.0f}%)")
         print(f"Failed:        {failed}")
+        if errors:
+            print(f"Errors:        {errors}")
         print(f"Avg score:     {avg_score:.2f}")
         print(f"Edited:        {edited} ads entered iteration loop")
         print(f"Rescued:       {rescued} ads saved by editing")
         print(f"Total cost:    ${total_cost:.4f}")
         print(f"{'=' * 50}")
 
-
-    def run_cycles(self, num_cycles: int = 1) -> list[AdRecord]:
+    def run_cycles(self, num_cycles: int = 1, count: int | None = None) -> list[AdRecord]:
         """Run the pipeline for multiple cycles with analytics.
 
         Each cycle processes all briefs. After each cycle:
@@ -233,6 +270,10 @@ class Pipeline:
         - Generate charts after all cycles
         """
         briefs = self._interpreter.load_briefs()
+        if count is not None:
+            max_briefs = max(1, (count + 2) // 3)
+            briefs = briefs[:max_briefs]
+
         all_records: list[AdRecord] = []
 
         quality_tracker = QualityTracker()
@@ -248,7 +289,13 @@ class Pipeline:
 
             cycle_records = []
             for i, brief in enumerate(briefs):
-                print(f"\n  Brief {i + 1}/{len(briefs)}: {brief.id}")
+                approved_so_far = sum(1 for r in all_records if r.status == "approved")
+                approved_cycle = sum(1 for r in cycle_records if r.status == "approved")
+                print(
+                    f"\n  Brief {i + 1}/{len(briefs)}: {brief.id}  "
+                    f"[cycle: {len(cycle_records)} ads, {approved_cycle} approved | "
+                    f"total: {len(all_records)} ads, {approved_so_far} approved]"
+                )
                 records = self.run_single_brief(brief)
                 for r in records:
                     r.cycle = cycle
@@ -266,11 +313,11 @@ class Pipeline:
             # Check regressions
             regressions = quality_tracker.detect_regressions(trends)
             if regressions:
-                print(f"\n  ⚠ Regressions detected in cycle {cycle}:")
+                print(f"\n  Regressions detected in cycle {cycle}:")
                 for reg in regressions:
                     print(
                         f"    {reg['dimension']}: "
-                        f"{reg['previous_avg']:.2f} → "
+                        f"{reg['previous_avg']:.2f} -> "
                         f"{reg['current_avg']:.2f} "
                         f"(drop: {reg['drop']:.2f})"
                     )
@@ -356,24 +403,77 @@ class Pipeline:
         return taxonomy
 
 
-def main():
-    research_mode = "--research" in sys.argv
+def _placeholder_ad():
+    """Return a placeholder AdCopy for error records."""
+    from src.models import AdCopy
+    return AdCopy(
+        primary_text="[Generation failed]",
+        headline="Error",
+        description="This ad failed to generate.",
+        cta="Learn More",
+    )
 
-    # Parse --cycles N
-    num_cycles = 1
-    args = sys.argv[1:]
-    for i, arg in enumerate(args):
-        if arg == "--cycles" and i + 1 < len(args):
-            num_cycles = int(args[i + 1])
 
-    pipeline = Pipeline()
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI arguments."""
+    parser = argparse.ArgumentParser(
+        description="Nerdy Ad Engine — autonomous ad copy generation pipeline"
+    )
+    parser.add_argument(
+        "--count", type=int, default=None,
+        help="Maximum number of ads to generate (default: all briefs × 3 variants)",
+    )
+    parser.add_argument(
+        "--cycles", type=int, default=1,
+        help="Number of generation cycles (default: 1)",
+    )
+    parser.add_argument(
+        "--seed", type=int, default=42,
+        help="Random seed for reproducibility (default: 42)",
+    )
+    parser.add_argument(
+        "--output-dir", type=str, default=None,
+        help="Output directory (default: output/)",
+    )
+    parser.add_argument(
+        "--demo", action="store_true",
+        help="Run in demo mode (quick walkthrough)",
+    )
+    parser.add_argument(
+        "--research", action="store_true",
+        help="Run competitive intelligence research",
+    )
+    parser.add_argument(
+        "--port", type=int, default=8020,
+        help="Server port for dashboard (default: 8020, range: 8020-8030)",
+    )
+    return parser.parse_args(argv)
 
-    if research_mode:
+
+def main(argv: list[str] | None = None):
+    args = _parse_args(argv)
+
+    # Validate port range
+    if not (8020 <= args.port <= 8030):
+        print(f"Error: port must be in range 8020-8030, got {args.port}")
+        sys.exit(1)
+
+    # Deterministic seeding
+    random.seed(args.seed)
+
+    # Output directory
+    output_dir = Path(args.output_dir) if args.output_dir else None
+    pipeline = Pipeline(output_dir=output_dir)
+
+    if args.demo:
+        from src.demo import run_demo
+        run_demo(pipeline, port=args.port)
+    elif args.research:
         pipeline.run_research()
-    elif num_cycles > 1:
-        pipeline.run_cycles(num_cycles)
+    elif args.cycles > 1:
+        pipeline.run_cycles(args.cycles, count=args.count)
     else:
-        pipeline.run_batch()
+        pipeline.run_batch(count=args.count)
 
 
 if __name__ == "__main__":

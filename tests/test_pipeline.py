@@ -98,19 +98,14 @@ class TestPipeline:
         records = pipeline.run_single_brief(brief)
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            # Monkey-patch PROJECT_ROOT for this test
-            import src.main as main_mod
-            original_root = main_mod.PROJECT_ROOT
-            main_mod.PROJECT_ROOT = type(original_root)(tmpdir)
-            try:
-                pipeline.save_results(records)
-                lib_path = os.path.join(tmpdir, "output", "ad_library.json")
-                failed_path = os.path.join(tmpdir, "output", "failed_ads.json")
-                assert os.path.exists(lib_path)
-                assert os.path.exists(failed_path)
+            from pathlib import Path
+            pipeline._output_dir = Path(tmpdir) / "output"
+            pipeline.save_results(records)
+            lib_path = os.path.join(tmpdir, "output", "ad_library.json")
+            failed_path = os.path.join(tmpdir, "output", "failed_ads.json")
+            assert os.path.exists(lib_path)
+            assert os.path.exists(failed_path)
 
-                with open(lib_path) as f:
-                    approved = json.load(f)
-                assert len(approved) == 3  # all approved in our mock
-            finally:
-                main_mod.PROJECT_ROOT = original_root
+            with open(lib_path) as f:
+                approved = json.load(f)
+            assert len(approved) == 3  # all approved in our mock

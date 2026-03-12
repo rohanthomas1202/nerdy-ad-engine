@@ -41,11 +41,14 @@ class SelfHealer:
         # Format sample ads for the prompt
         samples = []
         for r in poor_ads[:5]:
+            dim_score = next(
+                (ds.score for ds in r.evaluation.dimension_scores
+                 if ds.dimension == dim), "?",
+            )
             samples.append(
                 f"Primary: {r.ad_copy.primary_text}\n"
                 f"Headline: {r.ad_copy.headline}\n"
-                f"Score on {dim}: "
-                f"{next((ds.score for ds in r.evaluation.dimension_scores if ds.dimension == dim), '?')}"
+                f"Score on {dim}: {dim_score}"
             )
         sample_text = "\n\n".join(samples) if samples else "No samples available."
 
